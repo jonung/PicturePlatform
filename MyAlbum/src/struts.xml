@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+
+<package name="default" namespace="/" extends="struts-default">
+	<action name="albumShow" class="Action.personalAlbums">
+		<result>/mypicture.jsp</result>
+	</action>
+
+	<action name="pictureShowAction" class="Action.PictureShowAction">
+		<result>/album.jsp</result>
+	</action>
+	
+	<action name="pictureDisplay" class="Action.pictureShow">
+		<result>/album.jsp</result>
+	</action>
+	
+	
+	<action name="newAlbum" class="Action.newAlbum">
+		<result>/newalbum.jsp</result>
+	</action>
+	
+	<action name="personalAlbums" class="Action.personalAlbums">
+		<result>/personalAlbums.jsp</result>
+	</action>
+	
+	<action name="collectAlbums" class="Action.collectAlbums">
+		<result>/collectAlbums.jsp</result>
+	</action>
+	
+</package>
+
+
+<package name="test" extends="json-default">
+   		<action name="albumTags" class="JsonAction.albumTags">
+        	<result type="json">
+        	 <param name="root">resultString</param>
+        	</result>      
+        </action>
+        
+        <action name="myPictureTags" class="JsonAction.myPictureTags">
+        	<result type="json">
+        	 <param name="root">resultString</param>
+        	</result>      
+        </action>
+        
+        <action name="albumsIncludePicture" class="JsonAction.albumsIncludePicture">
+        	<result type="json">
+        	 <param name="root">resultString</param>
+        	</result>      
+        </action>
+        
+        <action name="relatedPicture" class="JsonAction.relatedPicture">
+        	<result type="json">
+        	 <param name="root">resultString</param>
+        	</result>      
+        </action>
+        
+        <action name="otherPictureInBook" class="JsonAction.otherPictureInBook">
+        	<result type="json">
+        	 <param name="root">resultString</param>
+        	</result>      
+        </action>
+        
+        <action name="pictureMetaData" class="JsonAction.pictureMetaData">
+        	<result type="json">
+        	 <param name="root">jsonMap</param>
+        	</result>      
+        </action>
+</package>
+
+
+</struts>    

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+
+<package name="default" namespace="/" extends="struts-default">
+	<action name="search" class="Picture.Actions.PictureSearch">
+		<result>/search.jsp</result>
+	</action>
+
+	<action name="pictureShowAction" class="Picture.Actions.PictureShowAction">
+		<result name="success">/search.jsp</result>
+	</action>
+	
+	<action name="academicImageSearch" class="Picture.Actions.AcademicImageSearch">
+		<result name="success">/AcademicImageSearch.jsp</result>
+	</action>
+
+	<action name="academicImageShowAction" class="Picture.Actions.AcademicImageShowAction">
+		<result name="success">/AcademicImageSearch.jsp</result>
+	</action>
+	
+	<action name="albumSearch" class="Picture.Actions.AlbumSearch">
+		<result name="success">/albumSearch.jsp</result>
+	</action>
+	
+	<action name="pictureData" class="Picture.Actions.PictureData">
+		<result name="success">/pictureData.jsp</result>
+	</action>
+	
+	<action name="albumData" class="Picture.Actions.AlbumData">
+		<result name="success">/albumData.jsp</result>
+	</action>
+			
+			
+</package>
+
+<package name="protection" namespace="/protected" extends="struts-default">
+	
+	<!-- add by gongjun -->	
+	<action name="pictureStoreGetAlbumName" class="Picture.Actions.PictureStoreGetAlbums" method="executeGetAlbumName">
+		<result name="success">storeAlbum.jsp</result>
+	</action>
+	<!-- add by gongjun -->	
+	
+	<!--
+	<action name="pictureStore" class="Picture.Actions.PictureStore">
+		<result name="success">storeAlbum.jsp</result>
+	</action>
+	-->
+	
+	<action name="albumStore" class="Picture.Actions.AlbumStore">
+		<result name="success">albumStore.jsp</result>
+	</action>
+	
+</package>
+
+
+<package name="collectPicture" extends="json-default">
+   		<action name="pictureStore" class="Picture.Actions.PictureStore">
+        	<result type="json">
+        	 <param name="root">queryresult</param>
+        	</result>      
+        </action>
+        
+        
+</package>
+	
+	
+	
+
+
+
+<package name="test" extends="json-default">
+   		<action name="Pic_Classify" class="Picture.Actions.PictureClassification">
+        	<result type="json"></result>      
+        </action>
+</package>
+
+
+
+
+</struts>    

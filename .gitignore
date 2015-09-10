@@ -1,2 +1,11 @@
-ImageSearchEngine
-MyAlbum
+.myeclipse
+.settings
+.svn
+conf
+Libs
+WebRoot
+.classpath
+.mymetadata
+.mystrutsdata
+.project
+
