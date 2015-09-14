@@ -39,10 +39,10 @@ public class AlbumData extends ActionSupport{
 	
 	
 	private static final long serialVersionUID = 1L;
-	public static Connection conn = null;
+	//public static Connection conn = null;//fixed@mpk
 	
 	public String execute()throws Exception{
-		
+		Connection conn = null;//fixed@mpk
 		//userid=getUserID();
 		username=getUserName();
 		userid = username;
@@ -51,17 +51,23 @@ public class AlbumData extends ActionSupport{
 			conn=DB18Util.connectMySql();
 		}
 		
-		
-		Statement statement=conn.createStatement();
+		//fixed@mpk
 		String sql="";
+		
 		if(tag==""){
-			sql="select * from userinfo.pictureStore where isDeleted = 0 and albumID="+albumID;
+			sql="select * from userinfo.pictureStore where isDeleted = 0 and albumID = ?";
 		}
 		else{
-			sql="select * from userinfo.pictureStore where isDeleted = 0 and albumID="+albumID+" and tags like '%"+tag+"%'";
+			sql="select * from userinfo.pictureStore where isDeleted = 0 and albumID = ? and tags like ?";
 		}
-		statement = conn.prepareStatement(sql);
-		ResultSet rs=statement.executeQuery(sql);
+		java.sql.PreparedStatement statement = conn.prepareStatement(sql);
+		if (tag == "") statement.setInt(1, Integer.parseInt(albumID));
+		else{
+			statement.setInt(1, Integer.parseInt(albumID));
+			statement.setString(2, "%" + tag + "%");
+		}
+		ResultSet rs = statement.executeQuery();
+		//fixed@mpk
 		while(rs.next()){
 			AlbumPicture m_picture=new AlbumPicture();
 			m_picture.setAlbumID(rs.getString("albumID"));
@@ -70,9 +76,12 @@ public class AlbumData extends ActionSupport{
 			pictureList.add(m_picture);
 			//albumList.add(rs.getString("name"));
 		}
-		sql="select * from userinfo.album where isDeleted =0 and id="+albumID;
+		//fixed@mpk
+		sql="select * from userinfo.album where isDeleted =0 and id = ?";
 		statement = conn.prepareStatement(sql);
-		rs=statement.executeQuery(sql);
+		statement.setInt(1, Integer.parseInt(albumID));
+		rs = statement.executeQuery();
+		//fixed@mpk
 		m_album=new album();
 		while(rs.next()){
 			m_album.setCreateTime(rs.getString("createTime"));
