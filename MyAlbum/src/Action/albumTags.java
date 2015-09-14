@@ -2,6 +2,7 @@ package Action;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -43,10 +44,11 @@ public class albumTags extends ActionSupport{
 	
 
 	private static final long serialVersionUID = 1L;
-	public static Connection conn = null;
+	//public static Connection conn = null;
 
 	public String execute()throws Exception{
 		//userid=getUserID();
+		Connection conn = null;
 		username=getUserName();
 		userid = username;
 		
@@ -56,10 +58,20 @@ public class albumTags extends ActionSupport{
 		
 		
 		///////////////////////////////////getAlbums///////////////////////////////////
-		Statement statement=conn.createStatement();
+		/*Statement statement=conn.createStatement();
 		String sql="select * from userinfo.pictureStore where isDeleted = 0 and userID="+"'"+userid + "'"+" and albumID="+albumID;
 		statement = conn.prepareStatement(sql);
-		ResultSet rs=statement.executeQuery(sql);
+		ResultSet rs=statement.executeQuery(sql);*/
+		
+		//fixed by Liujh
+		
+		String sql = "select * from useinfo.pictureStore where isDeleted = 0 and userID = ? and albumID = ? ";
+		PreparedStatement statement = conn.prepareStatement(sql);
+		statement.setString(1, "%" + userid + "%");
+		statement.setInt(2, Integer.parseInt(albumID));
+		ResultSet rs = statement.executeQuery();
+				
+		//fixed by Liujh
 		JSONArray records=new JSONArray();
 		Set<String> tagSet=new HashSet<String>();
 		while(rs.next()){
