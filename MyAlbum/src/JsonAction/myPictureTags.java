@@ -2,6 +2,7 @@ package JsonAction;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -40,22 +41,32 @@ public class myPictureTags extends ActionSupport{
 
 
 	private static final long serialVersionUID = 1L;
-	private Connection conn = null;
+	//private Connection conn = null;
 
 	public String execute()throws Exception{
 		username=getUserName();
 		userid = username;
-		
+		Connection conn = null;
 		if(conn==null) {
 			conn=DB18Util.connectMySql();
 		}
 		
 		
 		///////////////////////////////////getAlbums///////////////////////////////////
-		Statement statement=conn.createStatement();
+		/*Statement statement=conn.createStatement();
 		String sql="select * from userinfo.album where isDeleted = 0 and userID="+ "'"+userid + "'";
 		statement = conn.prepareStatement(sql);
-		ResultSet rs=statement.executeQuery(sql);
+		ResultSet rs=statement.executeQuery(sql);*/
+		
+		//fixed by Liujh
+		String sql="select * from userinfo.album where isDeleted = 0 and userID = ? ";
+		PreparedStatement statement = conn.prepareStatement(sql);
+		statement.setString(1, userid);
+		ResultSet rs=statement.executeQuery();
+		
+		//fixed by Liujh
+		
+		
 		JSONArray records=new JSONArray();
 		Set<String> tagSet=new HashSet<String>();
 		while(rs.next()){

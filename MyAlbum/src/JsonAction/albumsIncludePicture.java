@@ -2,6 +2,7 @@ package JsonAction;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -42,10 +43,10 @@ public class albumsIncludePicture extends ActionSupport{
 	
 
 	private static final long serialVersionUID = 1L;
-	private Connection conn = null;
+	//private Connection conn = null;
 
 	public String execute()throws Exception{
-		
+		 Connection conn = null;
 		username=getUserName();
 		userid = username;
 		
@@ -54,11 +55,21 @@ public class albumsIncludePicture extends ActionSupport{
 		}
 		
 		///////////////////////////////////getAlbums///////////////////////////////////
-		Statement statement=conn.createStatement();
+/*		Statement statement=conn.createStatement();
 		String sql="select * from userinfo.pictureStore where isDeleted = 0 and pictureID='"+pictureID+"'";
 		String _sql="select * from pictureStore, album where pictureStore.isDeleted = 0 and album.isDeleted = 0 and album.id = pictureStore.albumID and pictureStore.pictureID='"+pictureID+"'";
 		statement = conn.prepareStatement(_sql);
-		ResultSet rs=statement.executeQuery(_sql);
+		ResultSet rs=statement.executeQuery(_sql);*/
+		
+		//fixed by Liujh
+		
+		String sql="select * from userinfo.pictureStore where isDeleted = 0 and pictureID = ?";	
+		String _sql="select * from pictureStore, album where pictureStore.isDeleted = 0 and album.isDeleted = 0 and album.id = pictureStore.albumID and pictureStore.pictureID = ?'";
+		PreparedStatement statement = conn.prepareStatement(_sql);
+		statement.setString(1, pictureID);
+		ResultSet rs=statement.executeQuery();	
+		//fixed by Liujh
+				
 		JSONArray records=new JSONArray();
 		
 		while(rs.next()){

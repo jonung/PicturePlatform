@@ -2,6 +2,7 @@ package Action;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -68,11 +69,20 @@ public class personalAlbums extends ActionSupport {
 		
 		
 		///////////////////////////////////getAlbums///////////////////////////////////
-		Statement statement=conn.createStatement();
+		/*Statement statement=conn.createStatement();
 		String sql="select * from userinfo.album where isDeleted = 0 and userID="+ "'"+userid + "'";
 			
 		statement = conn.prepareStatement(sql);
-		ResultSet rs=statement.executeQuery(sql);
+		ResultSet rs=statement.executeQuery(sql);*/
+		
+		//fixed by Liujh
+		String sql = "select * from userinfo.albumStore where isDelected = 0 and userID = ? ";
+		PreparedStatement statement = conn.prepareStatement(sql);
+		statement.setString(1,  userid );
+		ResultSet rs = statement.executeQuery();
+				
+		//fixed by Liujh
+		
 		System.out.println("personal albums done !");
 		while(rs.next()){
 			album m_album=new album();
@@ -81,10 +91,20 @@ public class personalAlbums extends ActionSupport {
 			m_album.setName(rs.getString("name"));
 			m_album.setTags(rs.getString("tags"));
 			
-			statement=conn.createStatement();
+	/*		statement=conn.createStatement();
 			sql="select * from userinfo.pictureStore where isDeleted = 0 and userID="+ "'"+userid+ "'"+" and albumID="+albumID+" limit 0,4";
 			statement = conn.prepareStatement(sql);
-			ResultSet rstemp=statement.executeQuery(sql);
+			ResultSet rstemp=statement.executeQuery(sql);*/
+			
+			//fixed by Liujh
+			sql = "select * from useinfo.pictureStore where isDeleted = 0 and userID = ? and albumID = ? limit 0,4 ";
+			statement = conn.prepareStatement(sql);
+			statement.setString(1,  userid );
+			statement.setInt(2, Integer.parseInt(albumID));
+			ResultSet rstemp = statement.executeQuery();
+			//fixed by Liujh
+			
+			
 			String [] cover=new String[4];
 			int i=0;
 			while(rstemp.next()){

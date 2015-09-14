@@ -2,6 +2,7 @@ package Action;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -52,7 +53,8 @@ public class pictureShow extends ActionSupport{
 		}
 		
 		
-		Statement statement=conn.createStatement();
+		/*
+		 Statement statement=conn.createStatement();
 		String sql="";
 		if(tag==""){
 			sql="select * from userinfo.pictureStore where isDeleted = 0 and userID="+"'"+userid + "'"+" and albumID="+albumID;
@@ -62,6 +64,37 @@ public class pictureShow extends ActionSupport{
 		}
 		statement = conn.prepareStatement(sql);
 		ResultSet rs=statement.executeQuery(sql);
+		*/
+		
+
+		//fixed by Liujh
+		String sql="";
+		if(tag==""){
+			sql="select * from userinfo.pictureStore where isDeleted = 0 and userID = ? and  albumID = ? ";		
+		}
+		else{
+			sql="select * from userinfo.pictureStore where isDeleted = 0 and userID = ? and albumID = ? and tags like ?";	
+		}
+		
+		PreparedStatement statement = conn.prepareStatement(sql);
+		
+		if (tag == "") 
+			{
+			  statement.setString(1,  userid );
+			  statement.setInt(2, Integer.parseInt(albumID));
+			}
+		
+		else{
+			statement.setString(1,  userid);
+			statement.setInt(2, Integer.parseInt(albumID));
+			statement.setString(3, "%" + tag + "%");
+			
+		}
+		ResultSet rs = statement.executeQuery();
+		
+		//fixed by Liujh
+		
+		
 		while(rs.next()){
 			picture m_picture=new picture();
 			m_picture.setAlbumID(rs.getString("albumID"));
@@ -71,9 +104,18 @@ public class pictureShow extends ActionSupport{
 			//albumList.add(rs.getString("name"));
 		}
 		
-		sql="select * from userinfo.album where isDeleted =0 and id="+albumID;
+/*		sql="select * from userinfo.album where isDeleted =0 and id="+albumID;
 		statement = conn.prepareStatement(sql);
-		rs=statement.executeQuery(sql);
+		rs=statement.executeQuery(sql);*/
+		
+		//fixed by Liujh
+		sql="select * from userinfo.album where isDeleted =0 and id = ? ";
+		statement.setInt(1, Integer.parseInt(albumID));
+		statement = conn.prepareStatement(sql);
+		rs=statement.executeQuery();
+		//fixed by Liujh
+		
+		
 		m_album=new album();
 		while(rs.next()){
 			m_album.setCreateTime(rs.getString("createTime"));
