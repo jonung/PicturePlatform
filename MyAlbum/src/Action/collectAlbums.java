@@ -72,7 +72,7 @@ public class collectAlbums extends ActionSupport {
 		//fixed by Liujh
 		String sql = "select * from userinfo.albumStore where isDelected = 0 and userID = ?";
 		PreparedStatement statement = conn.prepareStatement(sql);
-		statement.setString(1, "%" + userid + "%");
+		statement.setString(1,  userid );
 		ResultSet rs = statement.executeQuery();
 				
 		//fixed by Liujh
@@ -84,7 +84,7 @@ public class collectAlbums extends ActionSupport {
 			ResultSet albumResultSet=statement.executeQuery(sql);*/
 			
 			//fixed by Liujh
-			sql="select * from userinfo.album where isDeleted = 0 and albumID = ?";
+			sql="select * from userinfo.album where isDeleted = 0 and id = ?";
 			statement = conn.prepareStatement(sql);
 			statement.setInt(1,Integer.parseInt(albumID));
 			ResultSet albumResultSet= statement.executeQuery();
