@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +73,7 @@ public class newAlbum extends ActionSupport{
 		}*/
 		
 		
-		Statement statement=conn.createStatement();
+	/*	Statement statement=conn.createStatement();
 		String sql="insert into userinfo.album(userID,name,tags,createTime,isDeleted,classID,private) values(" +
 		"'"+ userid + "'"
 		+",'"+albumName
@@ -83,7 +84,24 @@ public class newAlbum extends ActionSupport{
 		+"',"+albumPrivate+")";
 		
 		statement.execute(sql);
-		statement = conn.prepareStatement(sql);
+		statement = conn.prepareStatement(sql);*/
+		
+	//fixed by Liujh
+		
+		String sql="insert into userinfo.album(userID, name, tages, createTime, isDelected ,classID ,private) values(?,?,?,?,?,?,?)";
+		java.sql.PreparedStatement statement  = conn.prepareStatement(sql);
+		statement.setString(1, userid);
+		statement.setString(2, albumName);
+		statement.setString(3, albumTag );
+		statement.setTimestamp(4, new Timestamp(new java.util.Date().getTime()));
+		statement.setInt(5, 0);
+		statement.setString(6, albumClassify);
+		statement.setInt(7, Integer.parseInt(albumPrivate));
+		statement.execute();
+		
+		
+		//fixed by Liujh
+		
 		resultStr="创建成功，请关闭窗口！";
 		
 		
