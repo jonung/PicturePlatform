@@ -31,9 +31,11 @@ public class PictureStoreGetAlbums extends ActionSupport {
 	
 	//global variable
 	private static final long serialVersionUID = 1L;
-	public static Connection conn = null;
+	//public static Connection conn = null;//fixed@mpk
 
 	public String executeGetAlbumName() throws SQLException{
+		
+		Connection conn = null;//fixed@mpk
 		username=getUserName();
 		userid = username;
 		
@@ -45,10 +47,17 @@ public class PictureStoreGetAlbums extends ActionSupport {
 		////////////////////////////getAlbumName//////////////////////////////////
 		if(albumList.isEmpty()){
 			
-			Statement statement=conn.createStatement();
+			//fixed@mpk
+			/*Statement statement=conn.createStatement();
 			String sql="select * from userinfo.album where isDeleted = 0 and userID="+ "'"+userid + "'";
 			statement = conn.prepareStatement(sql);
-			ResultSet rs=statement.executeQuery(sql);
+			ResultSet rs=statement.executeQuery(sql);*/
+			
+			String sql="select * from userinfo.album where isDeleted = 0 and userID = ?";
+			java.sql.PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, userid);
+			ResultSet rs = statement.executeQuery();
+			//fixed@mpk
 			while(rs.next()){
 				AlbumResult m_albumResult=new AlbumResult();
 				m_albumResult.setName(rs.getString("name"));

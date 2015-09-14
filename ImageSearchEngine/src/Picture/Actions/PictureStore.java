@@ -42,7 +42,7 @@ public class PictureStore extends ActionSupport{
 	
 	//global variable
 	private static final long serialVersionUID = 1L;
-	public static Connection conn = null;
+	//public static Connection conn = null;//fixed@mpk
 
 	/*public String executeGetAlbumName() throws SQLException{
 		username=getUserName();
@@ -73,6 +73,8 @@ public class PictureStore extends ActionSupport{
 	}*/
 	
 	public String execute()throws Exception{
+		
+		Connection conn = null;//fixed@mpk
 		//userid=getUserID();
 		username=getUserName();
 		userid = username;
@@ -85,10 +87,17 @@ public class PictureStore extends ActionSupport{
 		////////////////////////////getAlbumName//////////////////////////////////
 		if(albumList.isEmpty()){
 			
-			Statement statement=conn.createStatement();
+			//fixed@mpk
+			/*Statement statement=conn.createStatement();
 			String sql="select * from userinfo.album where isDeleted = 0 and userID="+ "'"+userid + "'";
 			statement = conn.prepareStatement(sql);
-			ResultSet rs=statement.executeQuery(sql);
+			ResultSet rs=statement.executeQuery(sql);*/
+			
+			String sql="select * from userinfo.album where isDeleted = 0 and userID = ?";
+			java.sql.PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, userid);
+			ResultSet rs = statement.executeQuery();
+			//fixed@mpk
 			while(rs.next()){
 				AlbumResult m_albumResult=new AlbumResult();
 				m_albumResult.setName(rs.getString("name"));
@@ -106,24 +115,44 @@ public class PictureStore extends ActionSupport{
 			
 		}
 		
-		
-		Statement statement=conn.createStatement();
+		//fixed@mpk
+		/*Statement statement=conn.createStatement();
 		String sql="select * from userinfo.pictureStore where pictureID='"+pictureID+"' and albumID= "+albumID+" and userID="+ "'"+userid+"'";
 		statement = conn.prepareStatement(sql);
-		ResultSet rs=statement.executeQuery(sql);
+		ResultSet rs=statement.executeQuery(sql);*/
+		
+		String sql="select * from userinfo.pictureStore where pictureID = ? and albumID= ? and userID = ?";
+		java.sql.PreparedStatement statement = conn.prepareStatement(sql);
+		statement.setString(1, pictureID);
+		statement.setInt(2, Integer.parseInt(albumID));
+		statement.setString(3, userid);
+		ResultSet rs = statement.executeQuery();
+		//fixed@mpk
 		if(rs.next()){
 			queryresult="该相册中已经有了本图";
 			return SUCCESS;
 		}
 		
-		sql="insert into userinfo.pictureStore(userID,pictureID,tags,storeTime,isDeleted,albumID) values(" +
+		//fixed@mpk
+		/*sql="insert into userinfo.pictureStore(userID,pictureID,tags,storeTime,isDeleted,albumID) values(" +
 				"'"+userid + "'"
 				+",'"+pictureID
 				+"','"+tags
 				+"',now()"
 				+",0"
 				+","+albumID+")";
-		statement.execute(sql);
+		statement.execute(sql);*/
+		
+		sql="insert into userinfo.pictureStore(userID,pictureID,tags,storeTime,isDeleted,albumID) values(?, ?, ?, ?, 0, ?)";
+		statement = conn.prepareStatement(sql);
+		statement.setString(1, userid);
+		statement.setString(2, pictureID);
+		statement.setString(3, tags);
+		statement.setTimestamp(4, new java.sql.Timestamp(new java.util.Date().getTime()));
+		statement.setInt(5, Integer.parseInt(albumID));
+		statement.execute();
+		//fixed@mpk
+		
 		//statement.executeQuery(sql);
 		//username=getUserName();
 		queryresult="收藏成功";
