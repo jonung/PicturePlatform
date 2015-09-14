@@ -75,9 +75,9 @@ public class myPictureTags extends ActionSupport{
 		ResultSet rs=statement.executeQuery(sql);*/
 		
 		//fixed by Liujh
-		String sql="select * from userinfo.album where isDeleted = 0 and useID = ? ";
+		String sql="select * from userinfo.album where isDeleted = 0 and userID = ? ";
 		PreparedStatement statement  = conn.prepareStatement(sql);
-		statement.setString(1, "%" + userid + "%");
+		statement.setString(1,  userid );
 		ResultSet rs = statement.executeQuery();
 		//fixed by Liujh
 		
