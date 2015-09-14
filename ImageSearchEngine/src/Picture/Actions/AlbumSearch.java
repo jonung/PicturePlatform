@@ -1,6 +1,8 @@
 package Picture.Actions;
 
 
+
+
 import DBTool.DB18Util;
 import Picture.Models.AlbumResult;
 import Picture.Models.Classification;
@@ -154,10 +156,15 @@ public class AlbumSearch extends ActionSupport implements SessionAware, ServletR
 				conn= DB18Util.connectMySql();
 			}
 			
-			
-			Statement statement=conn.createStatement();
+			//fixed@mpk
+			/*Statement statement=conn.createStatement();
 			String sql="select * from userinfo.album where isDeleted = 0 and private = 0 and name like '%"+searchText+""+"%' limit " +indexStart+","+pages.getNUMPPGS();
-			statement = conn.prepareStatement(sql);
+			statement = conn.prepareStatement(sql);*/
+			String sql="select * from userinfo.album where isDeleted = 0 and private = 0 and name like ? limit ?,?";
+			java.sql.PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, "%" + searchText + "%");
+			statement.setInt(2, Integer.parseInt(indexStart));
+			statement.setInt(3, Integer.parseInt(pages.getNUMPPGS()));
 			
 			//fixed by gongjun
 			/*
@@ -171,8 +178,8 @@ public class AlbumSearch extends ActionSupport implements SessionAware, ServletR
 			
 			//fixed by gongjun
 			
-			ResultSet rs=statement.executeQuery(sql);
-			
+			ResultSet rs=statement.executeQuery();
+			//fixed@mpk
 			
 			while(rs.next()){
 				AlbumResult m_album=new AlbumResult();
@@ -180,12 +187,20 @@ public class AlbumSearch extends ActionSupport implements SessionAware, ServletR
 				String albumID=rs.getString("id");
 				m_album.setId(albumID);
 				
-				statement=conn.createStatement();
+				//fixed@mpk
+				/*statement=conn.createStatement();
 				sql="select * from userinfo.pictureStore where isDeleted = 0 "+" and albumID="+albumID+" limit 0,4";
 				statement = conn.prepareStatement(sql);
 				
 				
-				ResultSet rstemp=statement.executeQuery(sql);
+				ResultSet rstemp=statement.executeQuery(sql);*/
+				
+				sql="select * from userinfo.pictureStore where isDeleted = 0 and albumID = ? limit 0,4";
+				statement = conn.prepareStatement(sql);
+				statement.setInt(1, Integer.parseInt(albumID));
+				
+				ResultSet rstemp=statement.executeQuery();
+				//fixed@mpk
 				String [] cover=new String[4];
 				int i=0;
 				while(rstemp.next()){
@@ -231,10 +246,18 @@ public class AlbumSearch extends ActionSupport implements SessionAware, ServletR
 				conn= DB18Util.connectMySql();
 			}
 			
-			Statement statement=conn.createStatement();
+			//fixed@mpk
+			/*Statement statement=conn.createStatement();
 			String sql="select count(*) from userinfo.album where isDeleted = 0 and private = 0 and name like '%"+searchText+"%'";
 			statement = conn.prepareStatement(sql);
-			ResultSet rs=statement.executeQuery(sql);
+			ResultSet rs=statement.executeQuery(sql);*/
+			
+			
+			String sql="select count(*) from userinfo.album where isDeleted = 0 and private = 0 and name like ?";
+			java.sql.PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, "%" + searchText + "%");
+			ResultSet rs=statement.executeQuery();
+			//fixed@mpk
 			while(rs.next()){
 				str_totalCount=rs.getString("COUNT(*)");
 			}

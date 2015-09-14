@@ -41,11 +41,12 @@ public class AlbumStore extends ActionSupport{
 	//global
 	private static final long serialVersionUID = 1L;
 	
-	public static Connection conn = null;
+	//public static Connection conn = null;//fixed@mpk
 
 	
 	public String execute()throws Exception{
 	
+		Connection conn = null;//fixed@mpk
 		username=getUserName();
 		userid = username;
 		
@@ -61,10 +62,18 @@ public class AlbumStore extends ActionSupport{
 			
 		}
 		
-		Statement statement=conn.createStatement();
+		//fixed@mpk
+		/*Statement statement=conn.createStatement();
 		String sql="select * from userinfo.albumStore where albumID="+albumID+" and userID="+ "'"+userid + "'";
 		statement = conn.prepareStatement(sql);
-		ResultSet rs=statement.executeQuery(sql);
+		ResultSet rs=statement.executeQuery(sql);*/
+		
+		String sql="select * from userinfo.albumStore where albumID = ? and userID = ?";
+		java.sql.PreparedStatement statement = conn.prepareStatement(sql);
+		statement.setInt(1, Integer.parseInt(albumID));
+		statement.setString(2, userid);
+		ResultSet rs = statement.executeQuery();
+		//fixed@mpk
 		
 		if(rs.next()){
 			queryresult="您已经收藏过该图册了";
@@ -72,13 +81,24 @@ public class AlbumStore extends ActionSupport{
 			return SUCCESS;
 		}
 		
-		sql="insert into userinfo.albumStore(userID,tags,storeTime,isDeleted,albumID) values(" +
+		//fixed@mpk
+		/*sql="insert into userinfo.albumStore(userID,tags,storeTime,isDeleted,albumID) values(" +
 				"'"+userid + "'"
 				+",'"+tags
 				+"',now()"
 				+",0"
 				+","+albumID+")";
-		statement.execute(sql);
+		statement.execute(sql);*/
+		
+		sql="insert into userinfo.albumStore(userID,tags,storeTime,isDeleted,albumID) values( ?, ?, ?, 0, ?)";
+		statement = conn.prepareStatement(sql);
+		statement.setString(1, userid);
+		statement.setString(2, tags);
+		statement.setTimestamp(3, new java.sql.Timestamp(new java.util.Date().getTime()));
+		statement.setInt(4, Integer.parseInt(albumID));
+		statement.execute();
+		//fixed@mpk
+		
 		//statement.executeQuery(sql);
 		//username=getUserName();
 		queryresult="收藏成功";
