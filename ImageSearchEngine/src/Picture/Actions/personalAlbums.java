@@ -35,11 +35,12 @@ public class personalAlbums extends ActionSupport {
 	
 	
 	private static final long serialVersionUID = -6529319369847000493L;
-	public static Connection conn = null;
+	//public static Connection conn = null;//fixed@mpk
 
 
 	public String execute()throws Exception{
 		
+		Connection conn = null;//fixed@mpk
 		//userid=getUserID();
 		username=getUserName();
 		userid = username;
@@ -50,10 +51,18 @@ public class personalAlbums extends ActionSupport {
 		
 
 		///////////////////////////////////getAlbums///////////////////////////////////
-		Statement statement=conn.createStatement();
+		//fixed@mpk
+		/*Statement statement=conn.createStatement();
 		String sql="select * from userinfo.album where isDeleted = 0 and userID="+ "'"+userid+ "'"+" and private="+albumPrivate;
 		statement = conn.prepareStatement(sql);
-		ResultSet rs=statement.executeQuery(sql);
+		ResultSet rs=statement.executeQuery(sql);*/
+		
+		String sql="select * from userinfo.album where isDeleted = 0 and userID = ? and private = ?";
+		java.sql.PreparedStatement statement = conn.prepareStatement(sql);
+		statement.setString(1, userid);
+		statement.setInt(2, albumPrivate);
+		ResultSet rs = statement.executeQuery();
+		//fixed@mpk
 		while(rs.next()){
 			album m_album=new album();
 			String albumID=rs.getString("id");
@@ -61,10 +70,18 @@ public class personalAlbums extends ActionSupport {
 			m_album.setName(rs.getString("name"));
 			m_album.setTags(rs.getString("tags"));
 			
-			statement=conn.createStatement();
+			//fixed@mpk
+			/*statement=conn.createStatement();
 			sql="select * from userinfo.pictureStore where isDeleted = 0 and userID="+"'"+userid+ "'"+" and albumID="+albumID+" limit 0,4";
 			statement = conn.prepareStatement(sql);
-			ResultSet rstemp=statement.executeQuery(sql);
+			ResultSet rstemp=statement.executeQuery(sql);*/
+			
+			sql="select * from userinfo.pictureStore where isDeleted = 0 and userID = ? and albumID = ? limit 0,4";
+			statement = conn.prepareStatement(sql);
+			statement.setString(1, userid);
+			statement.setInt(2, Integer.parseInt(albumID));
+			ResultSet rstemp = statement.executeQuery();
+			//fixed@mpk
 			String [] cover=new String[4];
 			int i=0;
 			while(rstemp.next()){
