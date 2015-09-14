@@ -67,7 +67,7 @@ public class albumTags extends ActionSupport{
 		
 		String sql = "select * from useinfo.pictureStore where isDeleted = 0 and userID = ? and albumID = ? ";
 		PreparedStatement statement = conn.prepareStatement(sql);
-		statement.setString(1, "%" + userid + "%");
+		statement.setString(1, userid);
 		statement.setInt(2, Integer.parseInt(albumID));
 		ResultSet rs = statement.executeQuery();
 				
