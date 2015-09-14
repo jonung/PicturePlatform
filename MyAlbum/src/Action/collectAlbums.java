@@ -2,6 +2,7 @@ package Action;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -63,15 +64,33 @@ public class collectAlbums extends ActionSupport {
 		
 		
 		///////////////////////////////////getAlbums///////////////////////////////////
-		Statement statement=conn.createStatement();
+	/*	Statement statement=conn.createStatement();
 		String sql="select * from userinfo.albumStore where isDeleted = 0 and userID="+"'"+userid + "'";
 		statement = conn.prepareStatement(sql);
-		ResultSet rs=statement.executeQuery(sql);
+		ResultSet rs=statement.executeQuery(sql);*/
+		
+		//fixed by Liujh
+		String sql = "select * from userinfo.albumStore where isDelected = 0 and userID = ?";
+		PreparedStatement statement = conn.prepareStatement(sql);
+		statement.setString(1, "%" + userid + "%");
+		ResultSet rs = statement.executeQuery();
+				
+		//fixed by Liujh
+		
 		while(rs.next()){
 			String albumID=rs.getString("albumID");
-			sql="select * from userinfo.album where isDeleted = 0 and id="+albumID;
+			/*sql="select * from userinfo.album where isDeleted = 0 and id="+albumID;
 			statement = conn.prepareStatement(sql);
-			ResultSet albumResultSet=statement.executeQuery(sql);
+			ResultSet albumResultSet=statement.executeQuery(sql);*/
+			
+			//fixed by Liujh
+			sql="select * from userinfo.album where isDeleted = 0 and albumID = ?";
+			statement = conn.prepareStatement(sql);
+			statement.setInt(1,Integer.parseInt(albumID));
+			ResultSet albumResultSet= statement.executeQuery();
+			//fixed by Liujh
+			
+			
 			while(albumResultSet.next()){
 				album m_album=new album();
 				
@@ -79,10 +98,19 @@ public class collectAlbums extends ActionSupport {
 				m_album.setName(albumResultSet.getString("name"));
 				m_album.setTags(albumResultSet.getString("tags"));
 				
-				statement=conn.createStatement();
+			/*	statement=conn.createStatement();
 				sql="select * from userinfo.pictureStore where isDeleted = 0 and albumID="+albumID+" limit 0,4";
 				statement = conn.prepareStatement(sql);
-				ResultSet rstemp=statement.executeQuery(sql);
+				ResultSet rstemp=statement.executeQuery(sql);*/
+				
+				//fixed by Liujh
+				sql="select * from userinfo.pictureStore where isDeleted = 0 and albumID = ? limit 0,4";
+				statement = conn.prepareStatement(sql);
+				statement.setInt(1, Integer.parseInt(albumID));
+				ResultSet rstemp=statement.executeQuery();
+				//fixed by Liujh
+				
+				
 				String [] cover=new String[4];
 				int i=0;
 				while(rstemp.next()){
